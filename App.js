@@ -265,7 +265,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const tab = createBottomTabNavigator();
 function AccueilScreen() {
   return (<View style={styles.container}>
@@ -281,23 +281,50 @@ function UsersScreen() {
   </View>);
 }
 
-function ContactScreen() {
+/*function ContactScreen() {
   return (<View style={styles.container}>
     <Text>Leave a message here</Text>
     <StatusBar style="auto" />
   </View>);
+}*/
+function SettingScreen() {
+  return (<View style={styles.container}>
+    <Text>Vos paramètres</Text>
+    <StatusBar style="auto" />
+  </View>);
 }
+
 
 export default function App() {
 
   return (
-    <NavigationContainer>
-      <tab.Navigator>
-       <tab.Screen name="Home" component={AccueilScreen} options={{ title: 'Accueil' }}/> 
-       <tab.Screen name="Contact" component={ContactScreen} options={{ title: 'Call us' }}/> 
-       <tab.Screen name="Users" component={UsersScreen} options={{ title: 'Users' }}/> 
+<NavigationContainer>
+      <tab.Navigator
+
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name == "Home") { iconName = "home"; }
+            else if (route.name == "Setting") { iconName = "settings"; }
+            else if (route.name == "Users") { iconName = "people"; }
+        
+
+            return (
+              <Ionicons
+                name={iconName}
+                color={'red'}
+                size={size}
+              />
+            );
+          },
+        })}
+      >
+        <tab.Screen name="Home" component={AccueilScreen} />
+        <tab.Screen name="Users" component={UsersScreen} />
+        <tab.Screen name="Setting" component={SettingScreen} />
       </tab.Navigator>
     </NavigationContainer>
+
   );
 }
 
