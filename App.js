@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList,SafeAreaView,TouchableOpacity,Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,6 +7,25 @@ import { useEffect, useState } from 'react';
 
 const tab = createBottomTabNavigator();
 
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={{backgroundColor}}>
+  <View style={{flexDirection: 'row'}}>
+        <Image
+            style={styles.picture}
+            source={{ uri: 'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}}
+          />
+  <View>
+  <Text style={{textColor}}>{item.name}</Text>
+  <Text>{item.email}</Text>
+  <Text>{item.username}</Text>
+  <Text>{item.phone}</Text>
+  <Text>{item.address.street}</Text>
+  </View>
+  </View>  
+  </TouchableOpacity>
+  );
+
+  
 function AccueilScreen() {
   
   const[users,setUsers]=useState([]);
@@ -24,16 +43,34 @@ function AccueilScreen() {
       setUsers(data);
     })
   }
+  
+  const renderItem = ({ item }) => {
+ 
+    //const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
+    //const color = item.id === selectedId ? 'white' : 'black';
+ 
+    return (
+  <Item 
+        item={item}
+       // onPress={() => navigation.navigate('UserDetails', {userId: item.id})}
+        backgroundColor='#f9c2ff'
+        textColor='blue'
+      />
+    )
+ 
+  };
 
   
-  return (<View style={styles.container}>
-    {console.log(users)}
-    <Text>Welcome to REACT native</Text>
-    <StatusBar style="auto" />
-    <View style={styles.container}>
-      {users.map(_user=><Text key={_user.id}>{_user.name}***{_user.email}</Text>)}
-    </View>
-  </View>);
+  return (
+
+    <SafeAreaView style={styles.container}>
+        <Text>Our Users:</Text>
+        <FlatList
+                data={users}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+              />
+        </SafeAreaView>);
 }
 
 function SettingScreen() {
@@ -76,9 +113,21 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: StatusBar.currentHeight || 0
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16
+  },
+  title: {
+    fontSize: 24,
+  },
+  picture: {
+    height: 100,
+    width: 100,
+    marginRight: 16
   },
 });
 
