@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
 });
 
 export default App;*/
-
+/*
 import React, { useState } from "react";
 import {View,Image, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 
-  /*{
+  {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
     title: "First Item",
   },
@@ -151,7 +151,7 @@ import {View,Image, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, Touchab
     id: "58694a0f-3da1-471f-bd96-145571e29d72",
     title: "Third Item",
   },*/
-
+/*
   const DATA = [
 
     {
@@ -259,4 +259,53 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default App;*/
+
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import {createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const tab = createBottomTabNavigator();
+function AccueilScreen() {
+  return (<View style={styles.container}>
+    <Text>Welcome to REACT native</Text>
+    <StatusBar style="auto" />
+  </View>);
+}
+
+function UsersScreen() {
+  return (<View style={styles.container}>
+    <Text>Liste des utilisateurs</Text>
+    <StatusBar style="auto" />
+  </View>);
+}
+
+function ContactScreen() {
+  return (<View style={styles.container}>
+    <Text>Leave a message here</Text>
+    <StatusBar style="auto" />
+  </View>);
+}
+
+export default function App() {
+
+  return (
+    <NavigationContainer>
+      <tab.Navigator>
+       <tab.Screen name="Home" component={AccueilScreen} options={{ title: 'Accueil' }}/> 
+       <tab.Screen name="Contact" component={ContactScreen} options={{ title: 'Call us' }}/> 
+       <tab.Screen name="Users" component={UsersScreen} options={{ title: 'Users' }}/> 
+      </tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
