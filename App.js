@@ -1,170 +1,84 @@
-import React, { useState } from "react";
-import { SafeAreaView, Button, Text, View, Image, FlatList, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useEffect, useState } from 'react';
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const tab = createBottomTabNavigator();
 
-const DATA = [
+function AccueilScreen() {
+  
+  const[users,setUsers]=useState([]);
+  /// Chargement des data
 
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    firstName: 'Dimitri',
-    lastName: 'CERRATOPS',
-    description: "User 1 : Lorem ipsum",
+  useEffect(() => {
+    getData();
+  },[])
 
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    firstName: 'Sarah',
-    lastName: 'FISTOL',
-    description: "User 2 : Lorem ipsum",
-  },
-  {
+  const getData=()=>{
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response=>response.json())
+    .then(data=>{
+      //console.log(data);
+      setUsers(data);
+    })
+  }
 
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    firstName: 'Hervé',
-    lastName: 'LOCIRAPTOR',
-    description: "User 3 : Lorem ipsum",
-  },
-
-];
-
-const Item = ({ item, onPress, backgroundColor, textColor }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <View style={{ flexDirection: 'row' }}>
-      {/*<Image
-          style={styles.picture}
-          source={{ uri: item.img}}
-        />*/}
-      <View>
-        <Text style={[styles.title, textColor]}>{item.firstName}</Text>
-        <Text style={[styles.title, textColor]}>{item.lastName}</Text>
-      </View>
+  
+  return (<View style={styles.container}>
+    {console.log(users)}
+    <Text>Welcome to REACT native</Text>
+    <StatusBar style="auto" />
+    <View style={styles.container}>
+      {users.map(_user=><Text key={_user.id}>{_user.name}***{_user.email}</Text>)}
     </View>
-  </TouchableOpacity>
-);
-
-const HomeScreen = ({ navigation }) => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Button
-        title="Go to Jane's profile"
-        onPress={() =>
-          navigation.navigate('Profile', { name: 'Jane', adresse: 'Paris' })
-        }
-      />
-      <Button
-        title="Our Users"
-        onPress={() =>
-          navigation.navigate('User')
-        }
-      />
-    </SafeAreaView>
-  );
-};
-
-const ProfileScreen = ({ navigation, route }) => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>This is {route.params.name}'s profile</Text>
-      <Text>This is {route.params.adresse}</Text>
-    </SafeAreaView>)
-    ;
-};
-
-const UserScreen = ({ navigation }) => {
-
-  const [selectedId, setSelectedId] = useState(null);
-
-  const renderItem = ({ item }) => {
-
-    const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
-    const color = item.id === selectedId ? 'white' : 'black';
-
-    return (
-      <Item
-        item={item}
-        onPress={() => navigation.navigate('UserDetails', { userId: item.id })}
-        backgroundColor={{ backgroundColor }}
-        textColor={{ color }}
-      />
-    )
-
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>Our Users:</Text>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
-  );
-};
-
-const UserDetails = ({ navigation, route }) => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>User: {route.params.userId}</Text>
-    </SafeAreaView>
-  );
+  </View>);
 }
 
-const Nav = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        initialParams={{ name: 'Jane', adresse: 'Paris' }}
-      />
-      <Tab.Screen name="User" component={UserScreen} options={{ title: 'Our Users' }} />
-     
-    </Tab.Navigator>
-  )
+function SettingScreen() {
+  return (<View style={styles.container}>
+    <Text>Vos paramètres</Text>
+    <StatusBar style="auto" />
+  </View>);
 }
 
-const App = () => {
+export default function App() {
+
   return (
     <NavigationContainer>
-      <StatusBar
-        animated={true}
-        backgroundColor="#f9c2ff" />
+      <tab.Navigator
 
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name == "Home") { iconName = "home-outline"; }
+            else if (route.name == "Setting") { iconName = "settings-outline"; }
+        
 
-      <Stack.Navigator>
-        <Stack.Screen name="Nav" component={Nav} options={{ title: 'Home', headerShown: false }} />
-        <Stack.Screen name="UserDetails" component={UserDetails} options={{ user: 1 }} />
-      </Stack.Navigator>
+            return (
+              <Ionicons
+                name={iconName}
+                color={'red'}
+                size={size}
+              />
+            );
+          },
+        })}
+      >
+        <tab.Screen name="Home" component={AccueilScreen} />
+        <tab.Screen name="Setting" component={SettingScreen} />
+      </tab.Navigator>
     </NavigationContainer>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16
-  },
-  title: {
-    fontSize: 24,
-  },
-  picture: {
-    height: 100,
-    width: 100,
-    marginRight: 16
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default App;
