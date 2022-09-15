@@ -17,9 +17,9 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <View>
         <Text style={{ textColor }}>{item.name}</Text>
         <Text>{item.email}</Text>
-        <Text>{item.username}</Text>
-        <Text>{item.phone}</Text>
-        <Text>{item.address.street}</Text>
+        <Text>{item.nom}</Text>
+        <Text>{item.prenom}</Text>
+        <Text>{item.password}</Text>
       </View>
     </View>
   </TouchableOpacity>
@@ -56,9 +56,12 @@ function AccueilScreen() {
     //const data=await response.json();
     //setUsers(data)
     try{
-      const response=await fetch('https://jsonplaceholder.typicode.com/users');
+      //const response=await fetch('https://jsonplaceholder.typicode.com/users');
+
+      const response=await fetch('https://pharma.tunitransport.com/api/public/index.php/api/pharma/users');
       const data=await response.json();
-      setUsers(data)
+      //console.log(data['hydra:member'])
+      setUsers(data['hydra:member'])
     }
     catch(error){
       //console.log(error)
